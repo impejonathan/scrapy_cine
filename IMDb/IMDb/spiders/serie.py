@@ -31,16 +31,19 @@ class SerieSpider(CrawlSpider):
         'titre_original' : response.css('.sc-afe43def-3.EpHJp::text').extract(),
         'score' : response.css('.sc-bde20123-1.iZlgcd::text').extract_first(),
         'genre' : response.css('.ipc-chip__text::text').extract(),
-        'annee' : response.css('.ipc-link.ipc-link--baseAlt.ipc-link--inherit-color::text').extract_first().strip('()'),
-        'duree': response.css('.ipc-inline-list__item::text').extract_first(),
+        'annee' : response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li/a/text()').extract_first(),
+        'duree': response.xpath("//ul[@class='ipc-inline-list ipc-inline-list--show-dividers sc-afe43def-4 kdXikI baseAlt']//li[@class='ipc-inline-list__item']/text()")[-1:].extract(),
         'descriptions' : response.css('.sc-5f699a2-1.cfkOAP::text').extract_first().strip(),
         'acteurs' : response.xpath("(//li[@data-testid='title-pc-principal-credit'])[last()]//a/text()")[1:].extract(),
-        'public' : response.css('.ipc-link.ipc-link--baseAlt.ipc-link--inherit-color::text').extract_first(),
-        'pays' : response.css('.ipc-metadata-list-item__list-content-item.ipc-metadata-list-item__list-content-item--link::text').extract()[-1].strip(),
-        'langue' : response.css('.ipc-metadata-list-item__list-content-item.ipc-metadata-list-item__list-content-item--link::text').extract()[0].strip().strip('()'),
+        'public' : response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li[3]/a/text()')[-1:].extract(),
+        
+        'pays' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-origin"]//div/ul//li[@role="presentation"]/a/text()').extract_first(),
+        
+        'langue' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-languages"]/div/ul/li/a/text()').extract_first(),
         'nb_episode': response.css('.ipc-title__subtext::text').extract_first(),
-        'nb_saison': response.css('.ipc-simple-select__input::text').extract()
+
+        'nb_saison': response.xpath("//label[@for='browse-episodes-season']/text()").extract()[0]      
         }
-           
+        #    //div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-releasedate"]/div/ul/li/a/text()
 
        
