@@ -3,10 +3,10 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from ..items import ImdbItem
 
-class FilmSpider(CrawlSpider):
-    name = "film"
+class SerieSpider(CrawlSpider):
+    name = "serie"
     allowed_domains = ["www.imdb.com"]
-    start_urls = ["https://www.imdb.com/chart/top/?ref_=nv_mv_250"]
+    # start_urls = ["https://www.imdb.com/chart/top/?ref_=nv_tvv_250"]
     
     film_details = LinkExtractor(restrict_css='.titleColumn > a')
     rule_film_details = Rule(film_details,
@@ -18,7 +18,7 @@ class FilmSpider(CrawlSpider):
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 
     def start_requests(self):
-        yield scrapy.Request(url='https://www.imdb.com/chart/top/?ref_=nv_mv_250', headers={
+        yield scrapy.Request(url='https://www.imdb.com/chart/toptv/?ref_=nv_tvv_250', headers={
             'User-Agent': self.user_agent
         })
 
@@ -37,7 +37,9 @@ class FilmSpider(CrawlSpider):
         'acteurs' : response.xpath("(//li[@data-testid='title-pc-principal-credit'])[last()]//a/text()")[1:].extract(),
         'public' : response.css('.ipc-link.ipc-link--baseAlt.ipc-link--inherit-color::text').extract_first(),
         'pays' : response.css('.ipc-metadata-list-item__list-content-item.ipc-metadata-list-item__list-content-item--link::text').extract()[-1].strip(),
-        'langue' : response.css('.ipc-metadata-list-item__list-content-item.ipc-metadata-list-item__list-content-item--link::text').extract()[0].strip().strip('()')
+        'langue' : response.css('.ipc-metadata-list-item__list-content-item.ipc-metadata-list-item__list-content-item--link::text').extract()[0].strip().strip('()'),
+        'nb_episode': response.css('.ipc-title__subtext::text').extract_first(),
+        'nb_saison': response.css('.ipc-simple-select__input::text').extract()
         }
            
 
