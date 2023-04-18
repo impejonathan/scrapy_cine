@@ -2,6 +2,7 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from ..items import ImdbItem
+from ..utils import temps_en_minutes
 
 class FilmSpider(CrawlSpider):
     name = "film"
@@ -23,19 +24,21 @@ class FilmSpider(CrawlSpider):
         })
 
     def parse_item(self, response):
+        duree= response.css('.ipc-inline-list__item::text').extract_first()
+
         # all_responses = response.css('.titleColumn a')
         # items = ImdbItem()
         yield {
         # for response in all_responses:
-        'titre' :  response.css('.sc-afe43def-1.fDTGTb::text').extract(),
-        'titre_original' : response.css('.sc-afe43def-3.EpHJp::text').extract(),
+        'titre' :  ''.join(response.css('.sc-afe43def-1.fDTGTb::text').extract()),
+        'titre_original' : ''.join(response.css('.sc-afe43def-3.EpHJp::text').extract()),
         'score' : response.css('.sc-bde20123-1.iZlgcd::text').extract_first(),
-        'genre' : response.css('.ipc-chip__text::text').extract(),
+        'genre' : ''.join(response.css('.ipc-chip__text::text').extract()),
         'annee' : response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li/a/text()').extract_first(),
-        'duree': response.css('.ipc-inline-list__item::text').extract_first(),
+        'duree':temps_en_minutes(duree),
         'descriptions' : response.css('.sc-5f699a2-1.cfkOAP::text').extract_first().strip(),
-        'acteurs' : response.xpath("(//li[@data-testid='title-pc-principal-credit'])[last()]//a/text()")[1:].extract(),
-        'public' : response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li[2]/a/text()').extract(),
+        'acteurs' : ''.join(response.xpath("(//li[@data-testid='title-pc-principal-credit'])[last()]//a/text()")[1:].extract()),
+        'public' : ''.join(response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li[2]/a/text()').extract()),
         'pays' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-origin"]//div/ul//li[@role="presentation"]/a/text()').extract_first(),
         
         'langue' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-languages"]/div/ul/li/a/text()').extract_first()
