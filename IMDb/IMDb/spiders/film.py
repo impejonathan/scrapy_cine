@@ -40,8 +40,6 @@ class FilmSpider(CrawlSpider):
         'acteurs' : ''.join(response.xpath("(//li[@data-testid='title-pc-principal-credit'])[last()]//a/text()")[1:].extract()),
         'public' : ''.join(response.xpath('//div[@class="sc-385ac629-3 kRUqXl"]/div/ul/li[2]/a/text()').extract()),
         'pays' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-origin"]//div/ul//li[@role="presentation"]/a/text()').extract_first(),
-        
         'langue' : response.xpath('//div[@data-testid="title-details-section"]//ul//li[@data-testid="title-details-languages"]/div/ul/li/a/text()').extract_first()
         }
-
        

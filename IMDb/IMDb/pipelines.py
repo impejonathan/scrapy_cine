@@ -18,10 +18,10 @@ class ImdbPipeline(object):
     def __init__(self):
         self.client = pymongo.MongoClient(ATLAS_KEY)
         self.db = self.client["imdb"]
-        self.collection = self.db["films"]
+        self.collection = self.db["top_imdb"]
 
     def process_item(self, item, spider):
-        if not all(item.values()):
-            raise DropItem("Missing values!")
+        # Vérifier chaque champ et attribuer une valeur par défaut s'il est manquant
+        item = {key: value if value else "" for key, value in item.items()}
         self.collection.insert_one(dict(item))
         return item
