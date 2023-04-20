@@ -288,7 +288,7 @@ elif onglet == "recherche":
                 # genre = ''.join([' ' + i if i.isupper() else i for i in genre]).strip()
                 st.write("- Titre :", resultat["titre"])
                 st.write("  Année :", resultat["annee"])
-                # st.write("  Genre :", genre)
+                st.write("  Genre :", resultat["genre"])
                 st.write("  Acteurs :", ', '.join(resultat["acteurs"]))
                 st.write("  Durée :", resultat["duree"], "minutes")
                 st.write("  Score :", resultat["score"])
@@ -339,4 +339,21 @@ elif onglet == "recherche":
         # Bouton pour effectuer la recherche
         if st.button("Rechercher par note", key="rechercher_par_note"):
             search_by_score(selected_score)
+            
+            
+        # /////////////////////////////////////////////
+            
+        # Récupération de la liste des genres
+        genres = collection.distinct("genre")
 
+        # Sélection du genre
+        genre_selectionne = st.selectbox("Sélectionnez un genre", genres)
+
+        # Recherche des films avec le genre sélectionné
+        resultats = collection.find({"genre": genre_selectionne})
+
+        # Affichage des résultats
+        st.write("Résultats de la recherche :")
+        for resultat in resultats:
+            st.text("- Titre : "+ resultat["titre"] +"   Durée du film : "+ str(resultat["duree"])+ "minutes" + "  Score du film : "+ resultat["score"])
+       

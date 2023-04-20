@@ -5,7 +5,6 @@ from ..items import ImdbItem
 from ..utils import *
 import logging
 
-
 class FilmSpider(CrawlSpider):
     name = "film"
     allowed_domains = ["www.imdb.com"]
@@ -44,11 +43,11 @@ class FilmSpider(CrawlSpider):
                 'titre' :  ''.join(titre),
                 'titre_original' : titre_original,
                 'score' : score,
-                'genre' : drop_back_to_top(''.join(genre)),
+                'genre' : drop_back_to_top(str(genre)),
                 'annee' : annee,
                 'duree':temps_en_minutes(duree),
                 'descriptions' : descriptions,
-                'acteurs' : acteurs,
+                'acteurs' : split_comma(str(acteurs)),
                 'public' : public,
                 'pays': pays,
                 'langue': langue,
