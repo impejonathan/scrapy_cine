@@ -13,7 +13,7 @@ ATLAS_KEY = os.getenv('ATLAS_KEY')
 
 # Se connecter à la base de données IMDb dans Atlas
 client = MongoClient(ATLAS_KEY)
-db = client["imdb"]
+db = client["bdd"]
 collection = db["top_imdb"]
 
 
@@ -28,7 +28,6 @@ if onglet == "question":
 
     # Afficher le titre et la durée du film le plus long
     st.header("Q1 : Quel est le film le plus long")
-
     st.write("Le film le plus long est '", longest_movie["titre"], "' avec une durée de", longest_movie["duree"], "minutes.")
 
     st.header("Q2 : Quels sont les 5 films les mieux notés ?")
@@ -56,6 +55,7 @@ if onglet == "question":
     # Récupérer les 3 meilleurs films d'horreur
     best_horror = collection.find({"genre": {"$regex": "Horror"}}, sort=[("score", pymongo.DESCENDING)], limit=3)
     st.write("Les 3 meilleurs films d'horreur :")
+
     for film in best_horror:
         st.write(film["titre"], "(", film["score"], ")")
 
@@ -104,7 +104,6 @@ if onglet == "question":
 
 
     # Calculer la durée moyenne d'un film en fonction de son genre
-    # Calculer la durée moyenne d'un film en fonction de son genre
     pipeline = [
         {"$group": {"_id": "$genre", "duree_moyenne": {"$avg": "$duree"}}},
         {"$sort": {"_id": 1}}
@@ -114,7 +113,7 @@ if onglet == "question":
     # Afficher les résultats
     for resultat in resultats:
         # Supprimer "Back to top" du résultat
-        genre = resultat["_id"].replace("Back to top", "")
+        genre = resultat["_id"]
         # Ajouter un espace avant chaque majuscule
         genre = ''.join([' ' + i if i.isupper() else i for i in genre]).strip()
         # Afficher la durée moyenne arrondie

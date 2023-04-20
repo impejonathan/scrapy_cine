@@ -15,7 +15,7 @@ def temps_en_minutes(temps: str) -> int:
 
 
 def drop_back_to_top(x:str) -> list:
-    return x.split(',')[:-1]
+    return ", ".join(x.split(',')[:-1]) + ']'
 
 def split_comma(x:str) -> list:
     return x.split(',')
